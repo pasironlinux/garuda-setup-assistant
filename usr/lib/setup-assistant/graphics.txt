@@ -1,0 +1,33 @@
+false
+kolourpaint
+Kolourpaint (Paint application)
+false
+gimp
+GIMP (Advanced image manipulation program)
+false
+krita krita-plugin-gmic opencolorio
+Krita (Paint application by KDE)
+false
+digikam
+Digikam (Photo management app)
+false
+inkscape
+Inkscape (Vector graphics)
+false
+blender
+Blender (full featured 3D creation suite)
+false
+pencil2d
+Pencil 2D (2D handdrawn animations)
+false
+synfigstudio
+Synfig Studio (2D vector animation)
+false
+darktable
+DarkTable (Organize and develop raw images)
+false
+fontforge
+FontForge (Outline and font editor)
+false
+mypaint
+MyPaint (Digital painting)

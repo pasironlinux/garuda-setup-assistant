@@ -1,0 +1,39 @@
+true
+strawberry
+Strawberry Player (aimed at collectors)
+false
+olivia
+Olivia (Audio player with YouTube support)
+false
+audacious
+Audacious
+false
+cantata
+Cantata (Frontend for mpd)
+false
+kwave
+Kwave (Sound editor by KDE)
+false
+lollypop
+Lollypop (GNOME music player)
+false
+audacity
+Audacity (Record/edit audio)
+false
+ardour
+Ardour (professional-grade audio workstation)
+false
+lmms
+LMMS (The Linux MultiMedia Studio)
+false
+mixxx
+Mixxx (Digital DJ'ing)
+false
+musescore
+MuseScore (Sheet music notation)
+false
+rosegarden
+Rosegarden (MIDI/audio sequencer)
+false
+bitwig-studio
+Bitwig Studio (Digital audio workstation)

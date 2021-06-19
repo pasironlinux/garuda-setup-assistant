@@ -1,0 +1,309 @@
+#!/bin/bash
+
+function askYesNoQuestion
+{
+    yad \
+        --image="$1" \
+        --title="$2" \
+        --window-icon="$3" \
+        --geometry=700x100 \
+        --button=No:0 \
+        --button=Yes:1 \
+        --text-align=center \
+        --center \
+        --text "$4";
+    local code=$?
+    if [ "$code" -eq 252 ]; then
+        # The user doesn't want to continue here, they pressed the X button
+        exit 0
+    elif [ "$code" -eq 1 ]; then
+        return 1
+    # In case there is an unknown exit code, we assume No
+    else
+        return 0
+    fi
+}
+
+function askPackageSelectionQuestion
+{
+    askPackageSelectionQuestion_out=()
+
+    local stdout
+    stdout=$(yad \
+        --image="$1" \
+        --title="$2" \
+        --window-icon="$3" \
+        --text "$4" \
+        --geometry=600x500 \
+        --list \
+        --checklist \
+        --column=Install \
+        --column="Package:hd" \
+        --column="$5" \
+        --center < "$6")
+
+    if [ "$?" -eq 252 ]; then
+        # The user doesn't want to continue here, they pressed the X button
+        exit 0
+    fi
+
+    while IFS= read -r line
+    do
+        local checked="$(echo "$line" | cut -d '|' -f1)"
+        local packages="$(echo "$line" | cut -d '|' -f2)"
+        if [ "$checked" == "TRUE" ]; then
+            for package in $packages
+            do
+                askPackageSelectionQuestion_out+=("$package")
+            done
+        fi
+    done < <(printf '%s\n' "$stdout")
+}
+
+function isOnline
+{
+    # Because this can never be offline, right?
+    wget -q --spider http://garudalinux.org
+    return $?
+}
+
+function upgrade2ultimate
+{
+    PACKAGES=()
+    # WARNING: Currently not executed in pamac mode!
+    PREPARE=()
+    SETUP=()
+    # Currently disable installation via pamac 
+    CHECK_PAMAC=false
+    HAS_PAMAC_INSTALLER=false
+    
+    if [ "$CHECK_PAMAC" = "true" ]; then
+        if [ -x "$(command -v pamac-installer)" ]; then
+            HAS_PAMAC_INSTALLER=true
+        fi
+    fi  
+    
+    if ! askYesNoQuestion "font-manager" "Upgrade to ULTIMATE" "update" "Do you need additional asian fonts?"; then
+        PACKAGES+=("asian-fonts")
+    fi
+
+    if ! askYesNoQuestion "printer" "Upgrade to ULTIMATE" "update" "Do you need Printer, Scanner and Samba Support?"; then
+        if pacman -Qs plasma-workspace > /dev/null ; then
+            PACKAGES+=("printer-support"
+            "scanner-support"
+            "samba-support"
+            "kdenetwork-filesharing"
+            "samba-mounter-git"
+            "smb4k"
+            "print-manager"
+            "skanlite")
+        else
+            PACKAGES+=("printer-support"
+            "scanner-support"
+            "samba-support"
+            "gvfs-smb"
+            "simple-scan")
+        fi
+    fi
+
+    if ! askYesNoQuestion "wallpaper" "Upgrade to ULTIMATE" "update" "Do you want to install additional Garuda wallpapers?"; then
+        PACKAGES+=("garuda-wallpapers-extra")
+    fi
+
+   if pacman -Qs plasma-desktop > /dev/null ; then
+        if ! askYesNoQuestion "plasmashell" "Upgrade to ULTIMATE" "update" "Do you want to install additional KDE components and applications?"; then
+            PACKAGES+=("appmenu-gtk-module"
+            "ark"
+            "bluedevil"
+            "breeze"
+            "breeze-gtk"
+            "colord-kde"
+            "dolphin-plugins"
+            "drkonqi"
+            "filelight"
+            "gwenview"
+            "kaccounts-providers"
+            "kactivitymanagerd"
+            "kamoso"
+            "kate"
+            "kcalc"
+            "kcron"
+            "kde-cli-tools"
+            "kde-gtk-config"
+            "kdeconnect"
+            "kdecoration"
+            "kdeplasma-addons"
+            "kdf"
+            "kdialog"
+            "keditbookmarks"
+            "kfind"
+            "kgamma5"
+            "khelpcenter"
+            "khotkeys"
+            "kinfocenter"
+            "kio-extras"
+            "kio-fuse"
+            "kio-gdrive"
+            "kleopatra"
+            "kmenuedit"
+            "kompare"
+            "konsole"
+            "krdc"
+            "krename"
+            "krfb"
+            "kscreen"
+            "ksshaskpass"
+            "ksystemlog"
+            "kwalletmanager"
+            "kwrited"
+            "milou"
+            "okular"
+            "partitionmanager"
+            "plasma-browser-integration"
+            "plasma-desktop"
+            "plasma-disks"
+            "plasma-firewall"
+            "plasma-integration"
+            "plasma-nm"
+            "plasma-pa"
+            "plasma-systemmonitor"
+            "plasma-thunderbolt"
+            "plasma-vault"
+            "plasma-workspace"
+            "plasma-workspace-wallpapers"
+            "polkit-kde-agent"
+            "powerdevil"
+            "quota-tools"
+            "ruby"
+            "spectacle"
+            "systemsettings"
+            "yakuake")
+        fi
+    fi  
+
+
+   if pacman -Qs gnome-shell > /dev/null ; then
+        if ! askYesNoQuestion "gnome-shell" "Upgrade to ULTIMATE" "update" "Do you want to install additional GNOME applications?"; then
+            PACKAGES+=("gpaste"
+                "eog-plugins"
+                "grilo-plugins"
+                "seahorse-nautilus"
+                "gtkhash-nautilus"
+                "gnome-logs"
+                "gnome-remote-desktop"
+                "gnome-sound-recorder"
+                "vino"
+                "rygel"
+                "shotwell"
+                "lollypop")
+        fi
+    fi
+
+    askPackageSelectionQuestion 'discover' "Upgrade to ULTIMATE" 'update' "What extra Software centers do you want?" "Applications" "/usr/lib/setup-assistant/pkgmngrs.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+    
+    askPackageSelectionQuestion 'aterm' "Upgrade to ULTIMATE" 'update' "Do you need another kernel?" "Applications" "/usr/lib/setup-assistant/kernels.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+    
+    askPackageSelectionQuestion 'libreoffice-main' "Upgrade to ULTIMATE" 'update' "What Office suites do you want?" "Office" "/usr/lib/setup-assistant/office.txt"
+    
+    # Absolute HACK!
+    if [[ "${askPackageSelectionQuestion_out[@]}" =~ "libreoffice-fresh" ]] && [[ "${askPackageSelectionQuestion_out[@]}" =~ "libreoffice-still" ]] ; then
+        askPackageSelectionQuestion_out=( "${askPackageSelectionQuestion_out[@]/libreoffice-still}" )
+    fi
+
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    askPackageSelectionQuestion 'firefox' "Upgrade to ULTIMATE" 'update' "What extra browsers do you want?" "Applications" "/usr/lib/setup-assistant/browsers.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+    
+    askPackageSelectionQuestion 'thunderbird' "Upgrade to ULTIMATE" 'update' "What email clients do you want?" "Applications" "/usr/lib/setup-assistant/mail.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    # Thunderbird-appmenu is shipped in dr460nized
+    if [[ "${askPackageSelectionQuestion_out[@]}" =~ "thunderbird" ]] && [[ `pacman -Qs thunderbird-appmenu` ]] ; then
+        askPackageSelectionQuestion_out=( "${askPackageSelectionQuestion_out[@]/thunderbird-appmenu}" )
+    fi
+
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    askPackageSelectionQuestion 'telegram-desktop' "Upgrade to ULTIMATE" 'update' "What communication software do you want?" "Applications" "/usr/lib/setup-assistant/communication.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+    
+    askPackageSelectionQuestion 'kget' "Upgrade to ULTIMATE" 'update' "What communication software do you want?" "Applications" "/usr/lib/setup-assistant/internet.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    askPackageSelectionQuestion 'audacity' "Upgrade to ULTIMATE" 'update' "What audio software do you want?" "Applications" "/usr/lib/setup-assistant/audio.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    askPackageSelectionQuestion 'kdenlive' "Upgrade to ULTIMATE" 'update' "What video software do you want?" "Applications" "/usr/lib/setup-assistant/video.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    askPackageSelectionQuestion 'gimp' "Upgrade to ULTIMATE" 'update' "What graphics software do you want?" "Applications" "/usr/lib/setup-assistant/graphics.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    askPackageSelectionQuestion 'gimp' "Upgrade to ULTIMATE" 'update' "What multimedia software do you want?" "Applications" "/usr/lib/setup-assistant/multimedia.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+    
+    askPackageSelectionQuestion 'supertuxkart' "Upgrade to ULTIMATE" 'update' "What extra games do you want?" "Applications" "/usr/lib/setup-assistant/games.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    askPackageSelectionQuestion 'code' "Upgrade to ULTIMATE" 'update' "What development software do you want?" "Applications" "/usr/lib/setup-assistant/development.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    # Absolute HACK!
+    if [[ "${askPackageSelectionQuestion_out[@]}" =~ "podman" ]]; then
+        SETUP+=("systemctl enable --now podman.socket")
+    fi
+    
+    # Absolute HACK!
+    if [[ "${askPackageSelectionQuestion_out[@]}" =~ "docker" ]]; then
+        SETUP+=("systemctl enable --now docker.socket")
+    fi
+
+    askPackageSelectionQuestion 'virtualbox' "Upgrade to ULTIMATE" 'update' "What virtualization software do you want?" "Applications" "/usr/lib/setup-assistant/virtualization.txt"
+    PACKAGES=("${PACKAGES[@]}" "${askPackageSelectionQuestion_out[@]}")
+
+    # Absolute HACK!
+    if [[ "${askPackageSelectionQuestion_out[@]}" =~ "virt-manager-meta" ]] || [[ "${askPackageSelectionQuestion_out[@]}" =~ "gnome-boxes" ]]; then
+        SETUP+=("systemctl enable --now libvirtd")
+    fi
+
+    if [ "$HAS_PAMAC_INSTALLER" = "true" ]; then
+        # Pamac can correctly handle the pamac-aur and pamac-all conflict, PREPARE can be ignored here.
+        if ! pamac-installer ${PACKAGES[@]} ; then
+            exit 0
+        fi
+        pkexec bash -c "$( IFS=$'\n'; echo "${SETUP[*]}" )"
+    else
+        alacritty -e bash /usr/lib/setup-assistant/apply.sh <( IFS=$'\n'; echo "${PREPARE[*]}" ) <(printf '%s\n' "${PACKAGES[@]}") <( IFS=$'\n'; echo "${SETUP[*]}" )
+    fi
+}
+
+if [ -z "$SETUP_ASSISTANT_SELFUPDATE" ]; then
+    while ! isOnline
+    do
+        if askYesNoQuestion "update" "Setup Assistant" "update" "No internet connection available, try again?"; then
+            exit 0
+        fi
+    done
+
+    if ! askYesNoQuestion "update" "Setup Assistant" "update" "Do you want to get a recent mirrorlist?"; then
+        reflector-simple >/dev/null 2>&1
+    fi
+
+    if ! askYesNoQuestion "update" "Setup Assistant" "update" "Update the system? (recommended!)"; then
+        # yy because we may have updated the mirrorlist in the last step
+        alacritty -e pkexec  bash -c "pacman -Syyu; read -p 'Press enter to continue'"
+        # Allow the setup assistant to self update
+        SETUP_ASSISTANT_SELFUPDATE=1 exec setup-assistant
+    fi
+fi
+
+if ! askYesNoQuestion "update" "Setup Assistant" "update" "Upgrade to Ultimate? Install additional softwares (You can select which apps you want!)"; then
+    upgrade2ultimate
+fi
+
+if command -v pamac-installer &> /dev/null && ! askYesNoQuestion "update" "Setup Assistant" "update" "Do you want to remove the setup assistant?"; then
+        pamac-installer --remove garuda-setup-assistant
+fi

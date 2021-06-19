@@ -1,0 +1,13 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Setup Asssistant
+Name[de]=Setup Assistant
+Comment=First setup & upgrade to Ultimate
+Comment[de]=Erste Einrichtung & Upgrade zu Ultimate
+Encoding=UTF-8
+Exec=setup-assistant
+Terminal=false
+Type=Application
+Icon=gnome-system-log
+Categories=GTK;System;Garuda-Setup;
+NoDisplay=false     

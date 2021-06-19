@@ -1,0 +1,33 @@
+true
+qtcreator
+QtCreator
+true
+code
+Visual Studio Code
+false
+gitkraken
+Gitkraken
+false
+github-desktop-bin
+GitHub Desktop
+false
+emacs
+GNU Emacs
+false
+atom
+Atom
+false
+intellij-idea-community-edition
+IntelliJ-IDEA (Community Edition)
+false
+pycharm-community-edition
+PyCharm (Community Edition)
+false
+docker docker-compose
+Docker
+false
+podman-docker podman-compose crun
+Podman (Docker, usable with docker commands)
+false
+plasma-sdk
+Plasma SDK

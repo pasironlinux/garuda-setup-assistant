@@ -1,0 +1,12 @@
+true
+linux-lts linux-lts-headers
+Linux LTS (failsafe option)
+false
+linux-tkg-bmq linux-tkg-bmq-headers
+Linux-TKG-bmq (for 4 or lower cpu core count)
+false
+linux-tkg-muqss linux-tkg-muqss-headers
+Linux-TKG-muqss (for 8 or higher cpu core count)
+false
+linux-cacule linux-cacule-headers
+Linux-Cacule (less input lag, more responsive)

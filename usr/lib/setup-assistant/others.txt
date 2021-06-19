@@ -1,0 +1,6 @@
+ false
+variety
+Variety (Wallpaper changer)
+false
+conky-lua-nv conky-manager
+Conky (System monitor)

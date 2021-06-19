@@ -1,0 +1,27 @@
+true
+smplayer smplayer-skins smplayer-themes
+SMplayer (libmpv and Qt based video player)
+false
+kdenlive movit sox opus-tools frei0r-plugins
+Kdenlive (Video editor by KDE)
+false
+shotcut
+Shotcut (Qt-based video editor)
+false
+pitivi frei0r-plugins
+Pitivi
+false
+openshot
+Openshot
+false
+obs-studio
+OBS Studio (Video recording/streaming)
+false
+smplayer smplayer-skins smplayer-themes
+SMPlayer (Build-in codecs, high compatability video player)
+false
+vlc
+VLC 
+false
+baka-mplayer
+Baka-Mplayer (libmpv and Qt based video player)

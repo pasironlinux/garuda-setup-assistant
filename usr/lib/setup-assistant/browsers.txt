@@ -1,0 +1,36 @@
+true
+firedragon
+FireDragon (Librewolf fork with better KDE integration)
+false
+librewolf
+Librewolf
+false
+firefox
+Firefox
+false
+firefox-esr-bin
+Firefox ESR
+false
+chromium
+Chromium
+false
+ungoogled-chromium
+Ungoogled Chromium
+false
+vivaldi vivaldi-ffmpeg-codecs
+Vivaldi
+false
+opera opera-ffmpeg-codecs
+Opera
+false
+torbrowser-launcher
+Tor Browser (The Onion Router)
+false
+otter-browser
+Otter Browser
+false
+brave-bin
+Brave (Based on Chromium + privacy stuff)
+false
+falkon
+Falkon (KDE browser)

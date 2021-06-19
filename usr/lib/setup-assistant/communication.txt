@@ -1,0 +1,39 @@
+true
+telegram-desktop
+Telegram Desktop
+false
+discord
+Discord
+false
+neochat
+Neochat (Matrix client for kde)
+false
+fractal
+Fractal (Matrix client for gnome)
+false
+element-desktop
+Element (Matrix client based on Electron)
+false
+wire-desktop
+Wire (E2EE messenger)
+false
+signal-desktop
+Signal Desktop
+false
+jitsi-meet
+Jitsi-Meet (Open source webconferencing)
+false
+zoom
+Zoom (Proprietary webconferencing)
+false
+skypeforlinux-stable-bin
+Skype
+false
+slack-desktop
+Slack (Messenger)
+false
+mumble
+Mumble (Open source Teamspeak clone)
+false
+streamlink-twitch-gui
+Twitch GUI

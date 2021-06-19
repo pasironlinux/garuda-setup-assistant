@@ -1,0 +1,12 @@
+false
+virtualbox-meta
+Virtualbox (most likely easier for beginners)
+false
+gnome-boxes
+GNOME Boxes (Easy KVM)
+false
+virt-manager-meta
+Virt-manager (More advanced KVM)
+false
+anbox-support
+Anbox (Run Android apps on linux)

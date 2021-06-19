@@ -1,0 +1,15 @@
+false
+thunderbird
+Thunderbird (not needed in dr460nized)
+false
+kmail
+Kmail (KDE mail client)
+false
+geary
+Geary (GNOME mail client)
+false
+trojita
+Trojita (Qt mail client)
+false
+mailspring
+Mailspring

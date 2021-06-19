@@ -1,0 +1,24 @@
+true
+gnome-firmware
+gnome-firmware (firmware updater)
+false
+appimagelauncher
+Appimage Launcher (Enhances appimage integration)
+false
+pamac-aur
+Pamac (Gtk Gui software center)
+false
+octopi
+Octopi (Qt Gui software center)
+false
+bauh
+Bauh (Qt Gui for managing your applications)
+false
+discover packagekit-qt5
+Discover (Gui software center from Kde)
+false
+gnome-software gnome-software-packagekit-plugin 
+Gnome-software (Gui software center from Gnome)
+false
+apper
+Apper(An application and package manager using PackageKit)
